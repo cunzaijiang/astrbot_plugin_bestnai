@@ -1,0 +1,206 @@
+{
+  "api_url": {
+    "description": "API 地址",
+    "type": "string",
+    "hint": "例如: https://your-domain.com",
+    "default": ""
+  },
+  "api_key": {
+    "description": "API 密钥",
+    "type": "string",
+    "hint": "Bearer Token，填入你的 API Key",
+    "default": ""
+  },
+  "default_version": {
+    "description": "默认模型版本",
+    "type": "string",
+    "hint": "可选: 3 / 4 / 4.5，对应 NAI V3 / V4 / V4.5",
+    "default": "4.5"
+  },
+  "user_cooldown": {
+    "description": "用户冷却时间（秒）",
+    "type": "int",
+    "hint": "同一用户生图的最小间隔（秒）",
+    "default": 30,
+    "slider": {
+      "min": 0,
+      "max": 300,
+      "step": 5
+    }
+  },
+  "default_scale": {
+    "description": "默认 CFG Scale",
+    "type": "float",
+    "hint": "提示词引导强度，范围 0-10，推荐 5.0",
+    "default": 5.0,
+    "slider": {
+      "min": 0,
+      "max": 10,
+      "step": 0.5
+    }
+  },
+  "negative_prompt": {
+    "description": "默认负面提示词",
+    "type": "string",
+    "hint": "全局生效的负面提示词",
+    "default": "lowres, bad anatomy, bad hands, text, error, missing fingers"
+  },
+  "prompt_suffix": {
+    "description": "提示词后缀",
+    "type": "string",
+    "hint": "如: best quality, amazing quality",
+    "default": ""
+  },
+  "nai3_size": {
+    "description": "NAI V3 默认尺寸",
+    "type": "string",
+    "hint": "竖图/横图/方图/小竖图/小横图，或 宽x高",
+    "default": "竖图"
+  },
+  "nai3_steps": {
+    "description": "NAI V3 默认步数",
+    "type": "int",
+    "hint": "推荐 28，免费上限 28",
+    "default": 28,
+    "slider": {
+      "min": 1,
+      "max": 50,
+      "step": 1
+    }
+  },
+  "nai3_sampler": {
+    "description": "NAI V3 采样器",
+    "type": "string",
+    "hint": "推荐 k_euler_ancestral",
+    "default": "k_euler_ancestral"
+  },
+  "nai4_size": {
+    "description": "NAI V4 默认尺寸",
+    "type": "string",
+    "hint": "预设名（竖图/横图/方图）或 宽x高",
+    "default": "竖图"
+  },
+  "nai4_steps": {
+    "description": "NAI V4 默认步数",
+    "type": "int",
+    "hint": "推荐 23，免费上限 28",
+    "default": 23,
+    "slider": {
+      "min": 1,
+      "max": 50,
+      "step": 1
+    }
+  },
+  "nai4_sampler": {
+    "description": "NAI V4 采样器",
+    "type": "string",
+    "hint": "推荐 k_euler_ancestral",
+    "default": "k_euler_ancestral"
+  },
+  "nai45_size": {
+    "description": "NAI V4.5 默认尺寸",
+    "type": "string",
+    "hint": "预设名（竖图/横图/方图）或 宽x高",
+    "default": "竖图"
+  },
+  "nai45_steps": {
+    "description": "NAI V4.5 默认步数",
+    "type": "int",
+    "hint": "推荐 23，免费上限 28",
+    "default": 23,
+    "slider": {
+      "min": 1,
+      "max": 50,
+      "step": 1
+    }
+  },
+  "nai45_sampler": {
+    "description": "NAI V4.5 采样器",
+    "type": "string",
+    "hint": "推荐 k_euler_ancestral",
+    "default": "k_euler_ancestral"
+  },
+  "artist_presets": {
+    "description": "画师风格预设列表",
+    "type": "list",
+    "hint": "格式: [{\"name\":\"风格名\", \"prompt\":\"提示词\"}]",
+    "default": []
+  },
+  "default_artist_preset": {
+    "description": "默认画师预设",
+    "type": "string",
+    "hint": "填写预设名称，留空则不使用",
+    "default": ""
+  },
+  "save_images": {
+    "description": "保存生成的图片",
+    "type": "bool",
+    "hint": "开启后保存到 save_dir 目录",
+    "default": false
+  },
+  "save_dir": {
+    "description": "图片保存目录",
+    "type": "string",
+    "hint": "本地目录路径，save_images 开启时生效",
+    "default": ""
+  },
+  "auto_recall": {
+    "description": "自动撤回图片",
+    "type": "bool",
+    "hint": "仅支持 QQ/aiocqhttp 平台",
+    "default": false
+  },
+  "auto_recall_delay": {
+    "description": "自动撤回延迟（秒）",
+    "type": "int",
+    "hint": "发图后多少秒自动撤回",
+    "default": 30,
+    "slider": {
+      "min": 5,
+      "max": 300,
+      "step": 5
+    }
+  },
+  "translator_enabled": {
+    "description": "启用中文转提示词",
+    "type": "bool",
+    "hint": "开启后 /nai 中文描述会自动用 LLM 转为英文提示词",
+    "default": false
+  },
+  "translator_base_url": {
+    "description": "翻译器 API 地址",
+    "type": "string",
+    "hint": "OpenAI 兼容格式，如 https://api.openai.com",
+    "default": ""
+  },
+  "translator_api_key": {
+    "description": "翻译器 API 密钥",
+    "type": "string",
+    "hint": "翻译器使用的 API Key",
+    "default": ""
+  },
+  "translator_model": {
+    "description": "翻译模型",
+    "type": "string",
+    "hint": "如 gpt-4o-mini、claude-3-haiku、gemini-flash 等",
+    "default": "gpt-4o-mini"
+  },
+  "translator_show_progress": {
+    "description": "显示翻译进度",
+    "type": "bool",
+    "hint": "开启后翻译时会显示进度提示",
+    "default": true
+  },
+  "translator_show_result": {
+    "description": "显示翻译结果",
+    "type": "bool",
+    "hint": "开启后生图前显示英文提示词",
+    "default": true
+  },
+  "translator_system_prompt": {
+    "description": "翻译器系统提示词",
+    "type": "string",
+    "hint": "留空使用内置默认提示词",
+    "default": ""
+  }
+}
