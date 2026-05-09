@@ -272,6 +272,36 @@ def build_final_prompt(
     return ", ".join(p for p in parts if p)
 
 
+# 当 NSFW 关闭时，需要从正向 prompt 中移除的词（quality_toggle 可能自动注入 nsfw 等词）
+_NSFW_POSITIVE_BLOCKLIST = [
+    "nsfw", "explicit", "nude", "naked", "sex", "porn", "hentai",
+    "genitals", "penis", "vagina", "breast", "nipple",
+]
+
+
+def strip_nsfw_from_prompt(prompt: str) -> str:
+    """从正向提示词中移除 NSFW 相关词汇（不区分大小写，整词匹配）。
+
+    Args:
+        prompt: 原始正向提示词。
+
+    Returns:
+        清理后的正向提示词。
+    """
+    import re
+    parts = [p.strip() for p in prompt.split(",")]
+    cleaned = []
+    for part in parts:
+        lower = part.lower().strip()
+        blocked = any(
+            re.fullmatch(r"[\s]*" + re.escape(w) + r"[\s]*", lower)
+            for w in _NSFW_POSITIVE_BLOCKLIST
+        )
+        if not blocked:
+            cleaned.append(part)
+    return ", ".join(p for p in cleaned if p)
+
+
 def apply_nsfw_filter(negative_prompt: str, nsfw_enabled: bool) -> str:
     """根据 NSFW 开关决定是否追加 NSFW 负面提示词。
 

@@ -29,7 +29,7 @@ from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.message_components import Image
 from astrbot.api.star import Context, Star
 
-from .constants import SIZE_PRESETS, VERSION_MODELS, NAI_SUBCOMMANDS
+from .constants import SIZE_PRESETS, VERSION_MODELS, VERSION_MODELS_CURATED, NAI_SUBCOMMANDS
 from .core.generator import (
     APIKeyError,
     GenerationError,
@@ -43,6 +43,7 @@ from .core.translator import PromptTranslator, has_chinese
 from .models.config import GenerationConfig, PluginConfig
 from .utils.helpers import (
     apply_nsfw_filter,
+    strip_nsfw_from_prompt,
     apply_overrides,
     build_final_prompt,
     cleanup_file,
@@ -372,7 +373,20 @@ class BestNAIPlugin(Star):
         # NSFW 过滤
         nsfw_enabled = session_state.nsfw_enabled if session_state else False
         neg = apply_nsfw_filter(gen_config.negative_prompt, nsfw_enabled)
-        if neg != gen_config.negative_prompt:
+        if not nsfw_enabled:
+            from dataclasses import replace as dc_replace
+            # 清理正向 prompt 中的 NSFW 词
+            final_prompt = strip_nsfw_from_prompt(final_prompt)
+            # 切换到 Curated 模型（有内置内容审查）
+            cur_version = session_state.model_version if session_state else "4.5"
+            curated_model = VERSION_MODELS_CURATED.get(cur_version, gen_config.model)
+            gen_config = dc_replace(
+                gen_config,
+                model=curated_model,
+                negative_prompt=neg,
+                uc_preset="heavy",
+            )
+        elif neg != gen_config.negative_prompt:
             from dataclasses import replace as dc_replace
             gen_config = dc_replace(gen_config, negative_prompt=neg)
 
@@ -948,6 +962,26 @@ class BestNAIPlugin(Star):
 
         # 应用覆盖参数（以全局默认 generation 为基础）
         gen_config = apply_overrides(self.plugin_config.generation, overrides)
+
+        # NSFW 过滤（/nai_adv 也遵守会话级 NSFW 开关）
+        session_key = get_session_key(event)
+        adv_state = get_session_state(session_key)
+        adv_nsfw_enabled = adv_state.nsfw_enabled if adv_state else False
+        adv_neg = apply_nsfw_filter(gen_config.negative_prompt, adv_nsfw_enabled)
+        if not adv_nsfw_enabled:
+            from dataclasses import replace as dc_replace
+            prompt = strip_nsfw_from_prompt(prompt)
+            adv_version = adv_state.model_version if adv_state else "4.5"
+            curated_model = VERSION_MODELS_CURATED.get(adv_version, gen_config.model)
+            gen_config = dc_replace(
+                gen_config,
+                model=curated_model,
+                negative_prompt=adv_neg,
+                uc_preset="heavy",
+            )
+        elif adv_neg != gen_config.negative_prompt:
+            from dataclasses import replace as dc_replace
+            gen_config = dc_replace(gen_config, negative_prompt=adv_neg)
 
         # 发送生成中提示
         size_info = format_size_display(gen_config.width, gen_config.height)

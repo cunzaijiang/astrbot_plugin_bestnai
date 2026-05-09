@@ -68,6 +68,12 @@ VERSION_MODELS: dict = {
     "4": "nai-diffusion-4-full-anlas-0",
     "4.5": "nai-diffusion-4-5-full-anlas-0",
 }
+# SFW 模式对应的 Curated 模型（有内置内容审查）
+VERSION_MODELS_CURATED: dict = {
+    "3": "nai-diffusion-3-anlas-0",
+    "4": "nai-diffusion-4-curated-preview-anlas-0",
+    "4.5": "nai-diffusion-4-5-curated-anlas-0",
+}
 
 # NSFW 自动追加的负面提示词
 NSFW_NEGATIVE_TAGS = "nsfw, explicit, nude, naked"

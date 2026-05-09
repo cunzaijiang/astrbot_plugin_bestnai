@@ -1,8 +1,9 @@
 name: astrbot_plugin_bestnai
 desc: 通过 BestNAI API（NovelAI 图片生成）在 AstrBot 中生成 AI 图片，支持会话级设置、多模型版本、画师预设等
-version: 2.0.0
-author: AstrBot Plugin Developer
-repo: https://github.com/example/astrbot_plugin_bestnai
+version: 2.1.0
+author: 存在酱
+author_contact: QQ:1204999675
+repo: https://github.com/cunzaijiang/astrbot_plugin_bestnai
 tags:
   - image
   - novelai
